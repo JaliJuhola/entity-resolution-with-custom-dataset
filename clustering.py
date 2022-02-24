@@ -45,19 +45,15 @@ def getMostSimilarPairs(dfColumns, comparisonColumns, similarities, isPrimary):
 
 def getClustersWithMostSimilarPairs(mostSimilarPairsDf1, mostSimilarPairsDf2, suffix):
     clusters = []
+    already_at_cluster = set()
     secondarySuffix = "df1" if suffix == "df2" else "df2"
-    for (startsName, endsName) in mostSimilarPairsDf1.items():
+    initialIteration = mostSimilarPairsDf1.copy() if suffix == 'df1' else mostSimilarPairsDf2.copy()
+    for (startsName, endsName) in initialIteration.items():
         currentSuffix = suffix
-        currentCluster = set([f"{currentSuffix}*{startsName}", f"{secondarySuffix}*{endsName}"])
-        currentDf = mostSimilarPairsDf2
-        currentItem = f"{currentSuffix}*{endsName}"
-#        while currentItem not in currentCluster:
-#            startsName = endsName
-#            endsName = currentDf[endsName]
-#            currentCluster.add(currentItem)
-#            currentDf = mostSimilarPairsDf1 if currentDf is mostSimilarPairsDf2 else mostSimilarPairsDf2
-#            currentSuffix = "df1" if currentSuffix == "df2" else "df2"
-#            currentItem = f"{currentSuffix}*{endsName}"
+        currentCluster = set()
+        currentCluster.add(f"{currentSuffix}*{startsName}")
+        currentCluster.add(f"{secondarySuffix}*{endsName}")
+        currentDf = mostSimilarPairsDf1.copy() if suffix == 'df2' else mostSimilarPairsDf2.copy()
         clusters.append(currentCluster)
     return clusters
 
@@ -68,5 +64,5 @@ def get_clusters(df1, df2):
     mostSimilarPairsDf1 = getMostSimilarPairs(df1Columns, df2Columns, similaritiesBetweenProperties, True)
     mostSimilarPairsDf2 = getMostSimilarPairs(df2Columns, df1Columns, similaritiesBetweenProperties, False)
     df1Df2Cluster = getClustersWithMostSimilarPairs(mostSimilarPairsDf1, mostSimilarPairsDf2, 'df1')
-    df2Df1Cluster = getClustersWithMostSimilarPairs(mostSimilarPairsDf2, mostSimilarPairsDf1, 'df2')
+    df2Df1Cluster = getClustersWithMostSimilarPairs(mostSimilarPairsDf1, mostSimilarPairsDf2, 'df2')
     return [*df1Df2Cluster, *df2Df1Cluster]
