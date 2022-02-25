@@ -54,7 +54,6 @@ def jaccard_scheme(comparisons, df1Items, df2Items):
     return resultComparisons.drop_duplicates(subset=itemsComparisons.columns.difference(['blockId', 'weight']))
 
 def cardinality_node_pruning(comparisons, df1Items, df2Items):
-    comparisons = comparisons[comparisons['mainIndex'] != comparisons['secondaryIndex']]
     for itemIdx in df1Items:
         indexesToFilter = []
         filteredFirstComparisons = comparisons[((comparisons['mainDf'].str.match(itemIdx['df']) & (comparisons['mainIndex'] == itemIdx['id'])))]
@@ -68,5 +67,5 @@ def cardinality_node_pruning(comparisons, df1Items, df2Items):
                 indexesToFilter.append(idx)
         comparisons = comparisons[((comparisons['mainDf'] != itemIdx['df']) | (comparisons['mainIndex'] != itemIdx['id']) | (~comparisons['secondaryIndex'].isin(indexesToFilter)))]
         comparisons = comparisons[((comparisons['secondaryDf'] != itemIdx['df']) | (comparisons['secondaryIndex'] != itemIdx['id']) | (~comparisons['mainIndex'].isin(indexesToFilter)))]
-        
+
     return comparisons

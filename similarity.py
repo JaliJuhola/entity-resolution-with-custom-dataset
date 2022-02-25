@@ -2,7 +2,7 @@ import itertools
 import numpy as np
 import pandas as pd
 
-JACCARD_THRESHOLD = 0.5
+JACCARD_THRESHOLD = 0.4
 
 def jaccard_similarity(list1, list2):
     intersectionOfLists = list1.intersection(list2)
